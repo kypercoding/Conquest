@@ -1,6 +1,9 @@
 package data.interfaces;
 
 public interface Area {
+    // retrieves area ID
+    public int getAreaID();
+
     // retrieves area's defense bonus (by what percent will it reduce an attacker's damage)
     public double getDefenseBonus();
 
@@ -12,6 +15,4 @@ public interface Area {
 
     // checks if a unit can move into the area
     public boolean isOpen();
-
-
 }
