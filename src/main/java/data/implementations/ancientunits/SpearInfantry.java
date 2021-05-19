@@ -2,87 +2,63 @@ package data.implementations.ancientunits;
 
 import data.interfaces.Unit;
 
-import java.util.Random;
-
-public class SkirmisherInfantry implements Unit {
-    /** name of the ranged infantry unit (i.e. archers,
-     *  javelins, etc). */
+public class SpearInfantry implements Unit {
+    /** name of the spear infantry unit (i.e. levy spears, hoplites). */
     private final String name;
-    /** number of soldiers in ranged infantry unit. */
+    /** number of soldiers in spear infantry unit. */
     private int number;
     /** maximum possible number of soldiers in the unit. */
     private final int limit;
     /** cost of buying this new unit. */
     private final int unitCost;
 
-    /** amount of melee damage the unit deals. */
+    /** amount of melee damage the unit deals
+     (no ranged damage for melee unit). */
     private final int meleeDamage;
-    /** maximum amount of ranged damage the unit deals. */
-    private final int rangedDamage;
-    /** amount of armor the unit has. */
+    /** amount of armor the unit has (lowers damage inflicted by a constant
+     *  amount). */
     private final int armor;
+
     /** movement cost for moving one space on the battle board. */
     private final int movementCost;
 
-    /** number of diagonal squares that make up range of unit. */
-    private final int rangeFactor;
-    /** how much extra attack the special ability provides, as
-     *  a percent increase. */
-    private final double attackBonus;
+    /** ammunition that unit has left (how many attacks you can
+     * do as a ranged unit before you must use melee attack). */
+    private int ammunition;
+    /** how much defense the special ability provides, as
+     *  a percentage of damage remaining (i.e. a defense bonus
+     *  of 80% reduces damage TO 80% of its lethality). */
+    private final double defenseBonus;
     /** boolean checking whether or not the unit's special ability
      * is activated. */
     private boolean isActivated;
 
-    /**
-     * Constructs a new MeleeInfantry object.
-     * @param name is the name of the unit.
-     * @param limit is the maximum possible number of soldiers.
-     * @param unitCost is the cost of the unit.
-     * @param meleeDamage is the melee damage inflicted on enemy
-     *                    units.
-     * @param rangedDamage is the maximum possible ranged damage
-     *                     inflicted on enemy units.
-     * @param armor is the natural defense of the unit.
-     * @param movementCost is how many movement points are
-     *                     required to move a unit from one space to
-     *                     another.
-     * @param rangeFactor is how many diagonal squares make up the
-     *                    total range of the archers.
-     * @param attackBonus is the MeleeInfantry unit's special defense
-     *                     bonus (its value).
-     */
-    public SkirmisherInfantry(final String name, final int limit,
-                              final int unitCost, final int meleeDamage,
-                              final int rangedDamage,
-                              final int armor,
-                              final int movementCost,
-                              final int rangeFactor,
-                              final double attackBonus) {
+    public SpearInfantry(final String name, final int limit, final int unitCost,
+                final int meleeDamage, final int armor,
+                final int movementCost, final double defenseBonus) {
         this.name = name;
-        this.number = limit;
         this.limit = limit;
+        this.number = limit;
         this.unitCost = unitCost;
         this.meleeDamage = meleeDamage;
-        this.rangedDamage = rangedDamage;
         this.armor = armor;
         this.movementCost = movementCost;
-        this.rangeFactor = rangeFactor;
-        this.attackBonus = attackBonus;
+        this.defenseBonus = defenseBonus;
         this.isActivated = false;
     }
 
     /**
-     * Retrieves the RangedInfantry unit's name in String form.
+     * Retrieves the SpearInfantry unit's name in String form.
      * No parameters are taken in, returns a String of the unit
      * name.
-     * @return name of the unit in string form.
+     * @return name of the unit.
      */
     public String getUnitName() {
         return this.name;
     }
 
     /**
-     * Retrieves the RangedInfantry unit's number as an int.
+     * Retrieves the SpearInfantry unit's number as an int.
      * @return number of soldiers in unit.
      */
     public int getNumber() {
@@ -99,7 +75,7 @@ public class SkirmisherInfantry implements Unit {
 
     /**
      * Returns unit's soldier limit.
-     * @return limit in int form
+     * @return limit
      */
     public int getLimit() {
         return this.limit;
@@ -107,7 +83,7 @@ public class SkirmisherInfantry implements Unit {
 
     /**
      * Returns the cost of buying the unit.
-     * @return unitCost in int form
+     * @return unitCost
      */
     public int getUnitCost() {
         return this.unitCost;
@@ -115,15 +91,15 @@ public class SkirmisherInfantry implements Unit {
 
     /**
      * Returns the cost of moving the unit across the board.
-     * @return movementCost in int form
+     * @return movementCost
      */
     public int getArmor() {
         return this.armor;
     }
 
     /**
-     * Returns the cost of moving the unit across the board.
-     * @return movementCost in int form
+     * Returns the cost of moving the unit across a single space on the board.
+     * @return movementCost
      */
     public int getMovementCost() {
         return this.movementCost;
@@ -132,10 +108,10 @@ public class SkirmisherInfantry implements Unit {
     /**
      * Returns the range factor (how many diagonal squares
      * make up the attack range of the unit).
-     * @return range factor in int form
+     * @return 1 (spear troops do not have ranged attacks)
      */
     public int getRangeFactor() {
-        return this.rangeFactor;
+        return 1;
     }
 
     /**
@@ -150,12 +126,18 @@ public class SkirmisherInfantry implements Unit {
 
     /**
      * Damages the given unit with an attack,
-     * taking into account any possible defense bonuses.
+     * taking into account any possible defense bonuses or
+     * special abilities.
      * @param damage inflicted onto unit from enemy
      */
     public void damageUnit(final int damage) {
-        int finalDamage = damage - this.armor;
-        this.number -= damage;
+        double finalDamage = damage;
+
+        if (this.isActivated) {
+            finalDamage *= defenseBonus;
+        }
+
+        this.number -= (int) finalDamage;
     }
 
     /**
@@ -163,28 +145,11 @@ public class SkirmisherInfantry implements Unit {
      * taking into account any possible defense bonuses.
      * @param unit is enemy unit.
      * @param areaBonus (of enemy unit).
-     * @return true if attack runs with no errors
-     *         or false if the attack fails
+     * @return false if the attack fails, or if the method
+     *         doesn't apply (such as here).
      */
     public boolean attackWithRange(final Unit unit, final double areaBonus) {
-        // calculates damage inflicted on enemy
-        // based on range of possible damages and Java's Random type
-        Random random = new Random();
-        double damage = random.nextInt(this.rangedDamage);
-
-        // inflicts more damage onto the enemy unit if the
-        // special ability is activated
-        if (this.isActivated) {
-            damage *= this.attackBonus;
-        }
-
-        // applies area bonus of unit to reduce damage
-        damage *= areaBonus;
-
-        // inflicts damage onto enemy unit
-        unit.damageUnit((int) damage);
-
-        return true;
+        return false;
     }
 
     /**
@@ -195,16 +160,15 @@ public class SkirmisherInfantry implements Unit {
      * @return true if attack is executed without error or false
      * if an issue arises
      */
-    public boolean attackWithMelee(final Unit unit,
-                                   final double areaBonus) {
-        // check validation to ensure melee attacks are valid
+    public boolean attackWithMelee(final Unit unit, final double areaBonus) {
+        // add possible validations to ensure melee attacks work or not
 
         // computes the damage after taking into account terrain
         // defenses
         double damage = this.meleeDamage * areaBonus;
 
         // lowers the enemy unit by a certain amount of damage or
-        // less, depending on if other unit has defense bonus
+        // more, depending on if other unit has defense bonus
         unit.damageUnit((int) damage);
 
         return true;
@@ -226,10 +190,10 @@ public class SkirmisherInfantry implements Unit {
 
     /**
      * Checks if a given unit is ranged or not.
-     * @return true since the unit is a ranged unit.
+     * @return false since the unit is not a ranged unit.
      */
     public boolean isRangedUnit() {
-        return true;
+        return false;
     }
 
     /**
