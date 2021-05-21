@@ -121,6 +121,14 @@ public class SkirmisherInfantry implements Unit {
         return this.armor;
     }
 
+    public int getMeleeDamage() {
+        return this.meleeDamage;
+    }
+
+    public int getRangedDamage() {
+        return this.rangedDamage;
+    }
+
     /**
      * Returns the cost of moving the unit across the board.
      * @return movementCost in int form

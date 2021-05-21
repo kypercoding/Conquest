@@ -19,6 +19,12 @@ public interface Unit {
     // getter method: returns the armor defense of the unit
     public int getArmor();
 
+    // getter method: returns the melee damage of unit
+    public int getMeleeDamage();
+
+    // getter method: returns the ranged damage of unit
+    public int getRangedDamage();
+
     // getter method: returns the movement cost of the unit
     public int getMovementCost();
 

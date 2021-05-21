@@ -76,6 +76,14 @@ public class SkirmisherCavalry implements Unit {
         return this.armor;
     }
 
+    public int getMeleeDamage() {
+        return this.meleeDamage;
+    }
+
+    public int getRangedDamage() {
+        return this.rangedDamage;
+    }
+
     public int getMovementCost() {
         // reduces movement cost to certain percentage (movementBonus),
         // allowing skirmisher cavalry unit to travel more distance

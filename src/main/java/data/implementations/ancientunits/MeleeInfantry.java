@@ -125,6 +125,14 @@ public class MeleeInfantry implements Unit {
         return this.armor;
     }
 
+    public int getMeleeDamage() {
+        return this.meleeDamage;
+    }
+
+    public int getRangedDamage() {
+        return 0;
+    }
+
     /**
      * Returns the cost of moving the unit across the board.
      * @return movementCost

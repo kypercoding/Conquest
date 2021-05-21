@@ -97,6 +97,14 @@ public class SpearInfantry implements Unit {
         return this.armor;
     }
 
+    public int getMeleeDamage() {
+        return this.meleeDamage;
+    }
+
+    public int getRangedDamage() {
+        return 0;
+    }
+
     /**
      * Returns the cost of moving the unit across a single space on the board.
      * @return movementCost
@@ -132,6 +140,8 @@ public class SpearInfantry implements Unit {
      */
     public void damageUnit(final int damage) {
         double finalDamage = damage;
+
+        finalDamage -= this.armor;
 
         if (this.isActivated) {
             finalDamage *= defenseBonus;

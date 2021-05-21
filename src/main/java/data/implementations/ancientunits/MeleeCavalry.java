@@ -65,6 +65,14 @@ public class MeleeCavalry implements Unit {
         return this.armor;
     }
 
+    public int getMeleeDamage() {
+        return this.meleeDamage;
+    }
+    
+    public int getRangedDamage() {
+        return 0;
+    }
+
     public int getMovementCost() {
         return this.movementCost;
     }
@@ -83,7 +91,7 @@ public class MeleeCavalry implements Unit {
     }
 
     public boolean attackWithRange(Unit unit, double areaBonus) {
-        return false;
+        return true;
     }
 
     public boolean attackWithMelee(Unit unit, double areaBonus) {
