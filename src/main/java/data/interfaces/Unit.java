@@ -1,5 +1,7 @@
 package data.interfaces;
 
+import data.unittesting.StateType;
+
 public interface Unit {
     // getter method: returns the name of the unit
     public String getUnitName();
@@ -35,13 +37,13 @@ public interface Unit {
     public String getUnitSummary();
 
     // battle method: subtracts soldiers using damage parameter
-    public void damageUnit(int damage);
+    public StateType damageUnit(int damage);
 
     // battle method: allows unit to attack with ranged options
-    public boolean attackWithRange(Unit unit, double areaBonus);
+    public StateType attackWithRange(Unit unit, double areaBonus);
 
     // battle method: allows unit to attack with melee options
-    public boolean attackWithMelee(Unit unit, double areaBonus);
+    public StateType attackWithMelee(Unit unit, double areaBonus);
 
     // battle method: use special ability
     public void activateSpecialAbility();

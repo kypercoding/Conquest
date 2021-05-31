@@ -1,6 +1,7 @@
 package data.implementations.ancientunits;
 
 import data.interfaces.Unit;
+import data.unittesting.StateType;
 
 import java.util.Random;
 
@@ -161,9 +162,29 @@ public class SkirmisherInfantry implements Unit {
      * taking into account any possible defense bonuses.
      * @param damage inflicted onto unit from enemy
      */
-    public void damageUnit(final int damage) {
+    public StateType damageUnit(final int damage) {
+        // checks whether parameter is invalid
+        if (damage < 0) {
+            return StateType.returnFailure("Error: damage parameter invalid");
+        }
+
         int finalDamage = damage - this.armor;
-        this.number -= damage;
+
+        // if armor is sufficient enough to block attack
+        // completely, then the unit is undamaged
+        if (finalDamage <= 0) {
+            return StateType.returnSuccess(null);
+        }
+
+        // subtracts unit number by the final damage inflicted
+        this.number -= finalDamage;
+
+        if (this.number <= 0) {
+            return StateType.returnDestroy("Note: Unit has been destroyed");
+        }
+
+        // method success
+        return StateType.returnSuccess(null);
     }
 
     /**
@@ -174,7 +195,16 @@ public class SkirmisherInfantry implements Unit {
      * @return true if attack runs with no errors
      *         or false if the attack fails
      */
-    public boolean attackWithRange(final Unit unit, final double areaBonus) {
+    public StateType attackWithRange(Unit unit, final double areaBonus) {
+        // validating parameters
+        if (unit == null) {
+            return StateType.returnFailure("Error: null unit param");
+        }
+
+        if (areaBonus < 0 || areaBonus > 1) {
+            return StateType.returnFailure("Error: invalid area param");
+        }
+
         // calculates damage inflicted on enemy
         // based on range of possible damages and Java's Random type
         Random random = new Random();
@@ -189,10 +219,8 @@ public class SkirmisherInfantry implements Unit {
         // applies area bonus of unit to reduce damage
         damage *= areaBonus;
 
-        // inflicts damage onto enemy unit
-        unit.damageUnit((int) damage);
-
-        return true;
+        // inflicts damage onto enemy unit and returns status
+        return unit.damageUnit((int) damage);
     }
 
     /**
@@ -203,9 +231,16 @@ public class SkirmisherInfantry implements Unit {
      * @return true if attack is executed without error or false
      * if an issue arises
      */
-    public boolean attackWithMelee(final Unit unit,
+    public StateType attackWithMelee(Unit unit,
                                    final double areaBonus) {
-        // check validation to ensure melee attacks are valid
+        // validating parameters
+        if (unit == null) {
+            return StateType.returnFailure("Error: null unit param");
+        }
+
+        if (areaBonus < 0 || areaBonus > 1) {
+            return StateType.returnFailure("Error: invalid area param");
+        }
 
         // computes the damage after taking into account terrain
         // defenses
@@ -213,9 +248,7 @@ public class SkirmisherInfantry implements Unit {
 
         // lowers the enemy unit by a certain amount of damage or
         // less, depending on if other unit has defense bonus
-        unit.damageUnit((int) damage);
-
-        return true;
+        return unit.damageUnit((int) damage);
     }
 
     /**

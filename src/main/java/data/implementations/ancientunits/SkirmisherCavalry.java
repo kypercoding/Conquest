@@ -1,6 +1,7 @@
 package data.implementations.ancientunits;
 
 import data.interfaces.Unit;
+import data.unittesting.StateType;
 
 import java.util.Random;
 
@@ -102,12 +103,41 @@ public class SkirmisherCavalry implements Unit {
         return null;
     }
 
-    public void damageUnit(int damage) {
+    public StateType damageUnit(int damage) {
+        // checks whether parameter is invalid
+        if (damage < 0) {
+            return StateType.returnFailure("Error: damage parameter invalid");
+        }
+
         int finalDamage = damage - this.armor;
+
+        // if armor is sufficient enough to block attack
+        // completely, then the unit is undamaged
+        if (finalDamage <= 0) {
+            return StateType.returnSuccess(null);
+        }
+
+        // subtracts unit number by the final damage inflicted
         this.number -= finalDamage;
+
+        if (this.number <= 0) {
+            return StateType.returnDestroy("Note: Unit has been destroyed");
+        }
+
+        // method success
+        return StateType.returnSuccess(null);
     }
 
-    public boolean attackWithRange(Unit unit, double areaBonus) {
+    public StateType attackWithRange(Unit unit, double areaBonus) {
+        // validating parameters
+        if (unit == null) {
+            return StateType.returnFailure("Error: null unit param");
+        }
+
+        if (areaBonus < 0 || areaBonus > 1) {
+            return StateType.returnFailure("Error: invalid area param");
+        }
+
         // calculates damage inflicted on enemy
         // based on range of possible damages and Java's Random type
         Random random = new Random();
@@ -117,16 +147,26 @@ public class SkirmisherCavalry implements Unit {
         damage *= areaBonus;
 
         // inflicts damage onto enemy unit
-        unit.damageUnit((int) damage);
-
-        return true;
+        return unit.damageUnit((int) damage);
     }
 
-    public boolean attackWithMelee(Unit unit, double areaBonus) {
-        double damage = this.meleeDamage * areaBonus;
-        unit.damageUnit((int) damage);
+    public StateType attackWithMelee(Unit unit, double areaBonus) {
+        // validating parameters
+        if (unit == null) {
+            return StateType.returnFailure("Error: null unit param");
+        }
 
-        return true;
+        if (areaBonus < 0 || areaBonus > 1) {
+            return StateType.returnFailure("Error: invalid area param");
+        }
+
+        // computes the damage after taking into account terrain
+        // defenses
+        double damage = this.meleeDamage * areaBonus;
+
+        // lowers the enemy unit by a certain amount of damage or
+        // more, depending on if other unit has defense bonus
+        return unit.damageUnit((int) damage);
     }
 
     public void activateSpecialAbility() {

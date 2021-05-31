@@ -1,6 +1,7 @@
 package data.implementations.ancientunits;
 
 import data.interfaces.Unit;
+import data.unittesting.StateType;
 
 /**
 * MeleeInfantry class
@@ -165,14 +166,38 @@ public class MeleeInfantry implements Unit {
      * taking into account any possible defense bonuses.
      * @param damage inflicted onto unit from enemy
      */
-    public void damageUnit(final int damage) {
-        double finalDamage = damage;
+    public StateType damageUnit(final int damage) {
+        // checks whether parameter is invalid
+        if (damage < 0) {
+            return StateType.returnFailure("Error: damage parameter invalid");
+        }
 
+        int finalDamage = damage - this.armor;
+
+        // if armor is sufficient enough to block attack
+        // completely, then the unit is undamaged
+        if (finalDamage <= 0) {
+            return StateType.returnSuccess(null);
+        }
+
+        // applies defense bonus to reduce damage received
         if (this.isActivated) {
             finalDamage *= defenseBonus;
         }
 
-        this.number -= (int) finalDamage;
+        if (finalDamage <= 0) {
+            return StateType.returnSuccess(null);
+        }
+
+        // subtracts unit number by the final damage inflicted
+        this.number -= finalDamage;
+
+        if (this.number <= 0) {
+            return StateType.returnDestroy("Note: Unit has been destroyed");
+        }
+
+        // method success
+        return StateType.returnSuccess(null);
     }
 
     /**
@@ -183,8 +208,8 @@ public class MeleeInfantry implements Unit {
      * @return false if the attack fails, or if the method
      *         doesn't apply (such as here).
      */
-    public boolean attackWithRange(final Unit unit, final double areaBonus) {
-        return false;
+    public StateType attackWithRange(Unit unit, final double areaBonus) {
+        return StateType.returnSuccess(null);
     }
 
     /**
@@ -195,8 +220,15 @@ public class MeleeInfantry implements Unit {
      * @return true if attack is executed without error or false
      * if an issue arises
      */
-    public boolean attackWithMelee(final Unit unit, final double areaBonus) {
-        // add possible validations to ensure melee attacks work or not
+    public StateType attackWithMelee(Unit unit, final double areaBonus) {
+        // validating parameters
+        if (unit == null) {
+            return StateType.returnFailure("Error: null unit param");
+        }
+
+        if (areaBonus < 0 || areaBonus > 1) {
+            return StateType.returnFailure("Error: invalid area param");
+        }
 
         // computes the damage after taking into account terrain
         // defenses
@@ -204,9 +236,7 @@ public class MeleeInfantry implements Unit {
 
         // lowers the enemy unit by a certain amount of damage or
         // more, depending on if other unit has defense bonus
-        unit.damageUnit((int) damage);
-
-        return true;
+        return unit.damageUnit((int) damage);
     }
 
     /**
