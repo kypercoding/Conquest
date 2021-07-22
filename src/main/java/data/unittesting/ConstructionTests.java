@@ -26,6 +26,12 @@ public class ConstructionTests {
         if (unit.getArmor() < 0)
             return StateType.returnFailure("Error: Unit armor negative");
 
+        if (unit.getMeleeDamage() <= 0)
+            return StateType.returnFailure("Error: Unit melee damage negative or zero");
+
+        if (unit.getRangedDamage() < 0)
+            return StateType.returnFailure("Error: Unit ranged damage negative");
+
         if (unit.getMovementCost() <= 0)
             return StateType.returnFailure("Error: Unit movement cost negative or zero");
 

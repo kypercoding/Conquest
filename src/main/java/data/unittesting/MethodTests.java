@@ -106,6 +106,9 @@ public class MethodTests {
                     " special ability, area bonus");
         }
 
+        // final refill before future tests
+        defenderUnit.refill();
+
         return StateType.returnSuccess(null);
     }
 
@@ -213,6 +216,8 @@ public class MethodTests {
             return StateType.returnFailure("Error: damage inflicted is negative:" +
                     " special ability, area bonus");
         }
+
+        defenderUnit.refill();
 
         return StateType.returnSuccess(null);
     }

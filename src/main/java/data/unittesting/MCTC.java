@@ -3,7 +3,7 @@ package data.unittesting;
 import data.implementations.ancientunits.MeleeCavalry;
 import data.implementations.ancientunits.SpearInfantry;
 
-public class MeleeCavalryTestClient {
+public class MCTC {
     /**
         This testing client ensures that unit
         implementations (ranged or melee) function as
@@ -33,11 +33,11 @@ public class MeleeCavalryTestClient {
         System.out.println("Testing unit: " + melCavAttacker.getUnitName());
 
         StateType check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (!checkIfSuccess(check)) {
+        if (!StateType.checkIfSuccess(check)) {
             throw new Exception(check.getMessage());
         }
         check = MethodTests.testMeleeMethods(melCavAttacker, defender, 0.5);
-        if (!checkIfSuccess(check)) {
+        if (!StateType.checkIfSuccess(check)) {
             throw new Exception(check.getMessage());
         }
 
@@ -47,11 +47,11 @@ public class MeleeCavalryTestClient {
         System.out.println("Testing unit: " + melCavAttacker.getUnitName());
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfFailure(check)) {
+        if (StateType.checkIfFailure(check)) {
             throw new Exception(check.getMessage());
         }
         check = MethodTests.testMeleeMethods(melCavAttacker, defender, 0.5);
-        if (checkIfFailure(check)) {
+        if (StateType.checkIfFailure(check)) {
             throw new Exception(check.getMessage());
         }
 
@@ -61,11 +61,11 @@ public class MeleeCavalryTestClient {
         System.out.println("Testing unit: " + melCavAttacker.getUnitName());
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfFailure(check)) {
+        if (StateType.checkIfFailure(check)) {
             throw new Exception(check.getMessage());
         }
         check = MethodTests.testMeleeMethods(melCavAttacker, defender, 0.5);
-        if (checkIfFailure(check)) {
+        if (StateType.checkIfFailure(check)) {
             throw new Exception(check.getMessage());
         }
 
@@ -75,7 +75,7 @@ public class MeleeCavalryTestClient {
                 160, 1000, 20, 10, 600, 1.5);
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfSuccess(check) || checkIfDestroy(check)) {
+        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: null name");
         }
 
@@ -83,80 +83,43 @@ public class MeleeCavalryTestClient {
                 0, 1000, 20, 10, 600, 1.5);
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfSuccess(check) || checkIfDestroy(check)) {
-            System.out.println("Undetected Construction Error: 0 limit");
-            return;
+        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
+            throw new Exception("Undetected Construction Error: 0 limit");
         }
 
         melCavAttacker = new MeleeCavalry("Cataphracts",
                 80, 0, 20, 10, 600, 1.5);
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfSuccess(check) || checkIfDestroy(check)) {
-            System.out.println("Undetected Construction Error: 0 unit cost");
-            return;
+        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
+            throw new Exception("Undetected Construction Error: 0 unit cost");
         }
 
         melCavAttacker = new MeleeCavalry("Cataphracts",
                 80, 1000, 0, 10, 600, 1.5);
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfSuccess(check) || checkIfDestroy(check)) {
-            System.out.println("Undetected Construction Error: 0 melee damage");
-            return;
+        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
+            throw new Exception("Undetected Construction Error: 0 melee damage");
         }
 
         melCavAttacker = new MeleeCavalry("Cataphracts",
                 80, 1000, 20, -1, 600, 1.5);
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfSuccess(check) || checkIfDestroy(check)) {
-            System.out.println("Undetected Construction Error: -1 armor");
-            return;
+        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
+            throw new Exception("Undetected Construction Error: -1 armor");
         }
 
         melCavAttacker = new MeleeCavalry("Cataphracts",
                 80, 1000, 20, 10, 0, 1.5);
 
         check = ConstructionTests.testUnitStats(melCavAttacker);
-        if (checkIfSuccess(check) || checkIfDestroy(check)) {
-            System.out.println("Undetected Construction Error: 0 movement cost");
-            return;
+        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
+            throw new Exception("Undetected Construction Error: 0 movement cost");
         }
 
         System.out.println("Melee cavalry tests successfully passed");
         System.out.println("---------------------------------------");
-
-        // melee infantry implementation - normal cases
-    }
-
-    /**
-     * Checks whether StateType is SUCCESS,
-     * allows conditional statements to be more readable
-     * @param result
-     * @return boolean
-     */
-    private static boolean checkIfSuccess(StateType result) {
-        return result.getResult() == Result.SUCCESS;
-    }
-
-    /**
-     * Checks whether StateType is FAILURE,
-     * allows conditional statements to be more readable
-     * @param result
-     * @return boolean
-     */
-    private static boolean checkIfFailure(StateType result) {
-        return result.getResult() == Result.FAILURE;
-    }
-
-    /**
-     * Checks whether StateType is DESTROY,
-     * allows conditional statements to be more readable
-     * @param result
-     * @return boolean
-     */
-    private static boolean checkIfDestroy(StateType result) {
-        return result.getResult() == Result.DESTROY;
     }
 }

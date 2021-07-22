@@ -60,4 +60,34 @@ public class StateType {
     public static StateType returnDestroy(String message) {
        return new StateType(Result.DESTROY, message);
     }
+
+    /**
+     * Checks whether StateType is SUCCESS,
+     * allows conditional statements to be more readable
+     * @param result of testing method
+     * @return boolean
+     */
+    public static boolean checkIfSuccess(StateType result) {
+        return result.getResult() == Result.SUCCESS;
+    }
+
+    /**
+     * Checks whether StateType is FAILURE,
+     * allows conditional statements to be more readable
+     * @param result of testing method
+     * @return boolean
+     */
+    public static boolean checkIfFailure(StateType result) {
+        return result.getResult() == Result.FAILURE;
+    }
+
+    /**
+     * Checks whether StateType is DESTROY,
+     * allows conditional statements to be more readable
+     * @param result of testing method
+     * @return boolean
+     */
+    public static boolean checkIfDestroy(StateType result) {
+        return result.getResult() == Result.DESTROY;
+    }
 }
