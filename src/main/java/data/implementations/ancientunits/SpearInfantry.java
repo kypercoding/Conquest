@@ -23,9 +23,6 @@ public class SpearInfantry implements Unit {
     /** movement cost for moving one space on the battle board. */
     private final int movementCost;
 
-    /** ammunition that unit has left (how many attacks you can
-     * do as a ranged unit before you must use melee attack). */
-    private int ammunition;
     /** how much defense the special ability provides, as
      *  a percentage of damage remaining (i.e. a defense bonus
      *  of 80% reduces damage TO 80% of its lethality). */

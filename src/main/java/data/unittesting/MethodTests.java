@@ -1,5 +1,6 @@
 package data.unittesting;
 
+import data.enumerators.Result;
 import data.interfaces.Unit;
 
 public class MethodTests {

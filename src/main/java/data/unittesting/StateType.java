@@ -1,5 +1,7 @@
 package data.unittesting;
 
+import data.enumerators.Result;
+
 public class StateType {
     private final Result result;
     private final String message;

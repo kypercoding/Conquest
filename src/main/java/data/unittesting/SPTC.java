@@ -1,9 +1,9 @@
 package data.unittesting;
 
-import data.implementations.ancientunits.SkirmisherInfantry;
+import data.implementations.ancientunits.SpearInfantry;
 import data.implementations.ancientunits.SpearInfantry;
 
-public class SITC {
+public class SPTC {
     /**
      This testing client ensures that unit
      implementations (ranged or melee) function as
@@ -23,14 +23,14 @@ public class SITC {
         SpearInfantry defender = new SpearInfantry("Town Militia",
                 160, 300, 15, 0, 200, 0.9);
 
-        System.out.println("Testing Skirmisher Infantry normal cases...");
+        System.out.println("Testing Spear Infantry normal cases...");
 
         // skirmisher infantry implementation - normal cases
 
-        // unit 1: javelinmen
-        SkirmisherInfantry attacker = new SkirmisherInfantry("Javelinmen",
-                60, 150, 20, 10, 2,
-                150, 3, 1.2);
+        // unit 1: Levy Spearmen
+        SpearInfantry attacker = new SpearInfantry("Levy Spearmen",
+                160, 200, 20, 2, 150,
+                1.2);
         System.out.println("Testing unit: " + attacker.getUnitName());
 
         StateType check = ConstructionTests.testUnitStats(attacker);
@@ -42,9 +42,10 @@ public class SITC {
             throw new Exception(check.getMessage());
         }
 
-        // unit 2: archers
-        attacker = new SkirmisherInfantry("Archers", 60, 200,
-                15, 20, 4, 200, 4, 1.5);
+        // unit 2: phalanx spears
+        attacker = new SpearInfantry("Phalanx Spears",
+                160, 350, 35, 5, 250,
+                1.5);
         System.out.println("Testing unit: " + attacker.getUnitName());
 
         check = ConstructionTests.testUnitStats(attacker);
@@ -56,9 +57,9 @@ public class SITC {
             throw new Exception(check.getMessage());
         }
 
-        // unit 3: royal archers
-        attacker = new SkirmisherInfantry("Royal Archers", 80, 800,
-                20, 30, 7, 240, 4, 1.2);
+        // unit 3: royal pikemen
+        attacker = new SpearInfantry("Royal Pikemen", 160, 800,
+                50, 10, 200, 1.1);
         System.out.println("Testing unit: " + attacker.getUnitName());
 
         check = ConstructionTests.testUnitStats(attacker);
@@ -70,91 +71,58 @@ public class SITC {
             throw new Exception(check.getMessage());
         }
 
-        System.out.println("Testing SkirmisherInfantry construction errors...");
+        System.out.println("Testing SpearInfantry construction errors...");
 
         // skirmisher cavalry implementation - construction errors
-        attacker = new SkirmisherInfantry(null,
-                160, 1000, 20, 10, 2, 150, 2,
-                1.5);
+        attacker = new SpearInfantry(null, 160, 800,
+                50, 10, 200, 1.1);
 
         check = ConstructionTests.testUnitStats(attacker);
         if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: null name");
         }
 
-        attacker = new SkirmisherInfantry("Royal Archers",
-                0, 1000, 20, 10, 2, 150, 2,
-                1.5);
+        attacker = new SpearInfantry("Royal Pikemen", 0, 800,
+                50, 10, 200, 1.1);
 
         check = ConstructionTests.testUnitStats(attacker);
         if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: 0 limit");
         }
 
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 0, 20, 10, 2, 150, 2,
-                1.5);
+        attacker = new SpearInfantry("Royal Pikemen", 160, 0,
+                50, 10, 200, 1.1);
 
         check = ConstructionTests.testUnitStats(attacker);
         if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: 0 unit cost");
         }
 
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 1000, 0, 10, 2, 150, 2,
-                1.5);
+        attacker = new SpearInfantry("Royal Pikemen", 160, 800,
+                0, 10, 200, 1.1);
 
         check = ConstructionTests.testUnitStats(attacker);
         if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: 0 melee damage");
         }
 
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 1000, 20, -1, 2, 150, 2,
-                1.5);
-
-        check = ConstructionTests.testUnitStats(attacker);
-        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
-            throw new Exception("Undetected Construction Error: -1 ranged damage");
-        }
-
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 1000, 20, 10, -1, 150, 2,
-                1.5);
+        attacker = new SpearInfantry("Royal Pikemen", 160, 800,
+                50, -1, 200, 1.1);
 
         check = ConstructionTests.testUnitStats(attacker);
         if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: -1 armor");
         }
 
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 1000, 20, 10, 2, 0, 2,
-                1.5);
+        attacker = new SpearInfantry("Royal Pikemen", 160, 800,
+                50, 10, 0, 1.1);
 
         check = ConstructionTests.testUnitStats(attacker);
         if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
             throw new Exception("Undetected Construction Error: 0 movement cost");
         }
 
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 1000, 20, 10, 2, 0, 2,
-                1.5);
-
-        check = ConstructionTests.testUnitStats(attacker);
-        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
-            throw new Exception("Undetected Construction Error: 0 movement cost");
-        }
-
-        attacker = new SkirmisherInfantry("Royal Archers",
-                160, 1000, 20, 10, 2, 150, 0,
-                1.5);
-
-        check = ConstructionTests.testUnitStats(attacker);
-        if (StateType.checkIfSuccess(check) || StateType.checkIfDestroy(check)) {
-            throw new Exception("Undetected Construction Error: range factor 0 or negative");
-        }
-
-        System.out.println("Skirmisher Infantry tests successfully passed");
+        System.out.println("Spear Infantry tests successfully passed");
         System.out.println("---------------------------------------");
     }
 }

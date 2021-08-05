@@ -3,57 +3,133 @@ package data.interfaces;
 import data.unittesting.StateType;
 
 public interface Unit {
-    // getter method: returns the name of the unit
+    /**
+     * Returns name of the unit.
+     * @return String
+     */
     public String getUnitName();
 
-    // getter method: returns the number of soldiers left in a unit
+    /**
+     * Returns number of soldiers in unit.
+     * @return int
+     */
     public int getNumber();
 
-    // setter method: sets the number of soldiers left in a unit
+    /**
+     * Sets number of soldiers in unit.
+     * @param number
+     */
     public void setNumber(int number);
 
-    // getter method: returns the maximum amount of soldiers you can have in the unit
+    /** Returns the maximum amount of soldiers you can have in the
+     * unit.
+     * @return int
+     */
     public int getLimit();
 
-    // getter method: returns the cost of buying the entire unit
+    /**
+     * Returns cost of buying unit.
+     * @return int
+     */
     public int getUnitCost();
 
-    // getter method: returns the armor defense of the unit
+    /**
+     * Returns armor defense points of unit (the amount of
+     * damage an attack will decrease by a constant amount).
+     * @return int
+     */
     public int getArmor();
 
-    // getter method: returns the melee damage of unit
+    /**
+     * Returns the amount of melee damage a unit will inflict.
+     * @return int
+     */
     public int getMeleeDamage();
 
-    // getter method: returns the ranged damage of unit
+    /**
+     * Returns the amount of ranged damage a unit will inflict.
+     * @return int
+     */
     public int getRangedDamage();
 
-    // getter method: returns the movement cost of the unit
+    /**
+     * Returns the amount of points a unit will require to move
+     * one spot on a battefield map.
+     * @return int
+     */
     public int getMovementCost();
 
-    // getter method: return the range factor of unit (the range factor is multiplied by sqrt(2) to get a full range)
+    /**
+     * Returns the number of diagonal squares used in making
+     * up a unit's projectile range (if the unit is a melee
+     * unit, the method should simply return 1).
+     * @return int
+     */
     public int getRangeFactor();
 
-    // getter method: return a summary of the unit in String form
+    /**
+     * Returns a summary of a unit contained in String form.
+     * @return String
+     */
     public String getUnitSummary();
 
-    // battle method: subtracts soldiers using damage parameter
+    /**
+     * Damages a unit by a certain amount of damage. Damage
+     * may be decreased depending on unit's armor points and
+     * unit-specific defensive bonus.
+     * Returns SUCCESS if no specific errors are encountered,
+     * Returns DESTROY if the unit number goes below 0,
+     * Returns FAILURE if error is encountered.
+     * @param damage
+     * @return StateType
+     */
     public StateType damageUnit(int damage);
 
-    // battle method: allows unit to attack with ranged options
+    /**
+     * Attacks an enemy unit with the current unit object.
+     * Returns SUCCESS if no specific errors are encountered,
+     * Returns DESTROY if the unit number goes below 0,
+     * Returns FAILURE if error is encountered.
+     * @param unit
+     * @param areaBonus
+     * @return StateType
+     */
     public StateType attackWithRange(Unit unit, double areaBonus);
 
-    // battle method: allows unit to attack with melee options
+    /**
+     * Attacks an enemy unit with the current unit object
+     * through its melee damage.
+     * Returns SUCCESS if no specific errors are encountered,
+     * Returns DESTROY if the unit number goes below 0,
+     * Returns Failure if error is encountered.
+     * @param unit
+     * @param areaBonus
+     * @return StateType
+     */
     public StateType attackWithMelee(Unit unit, double areaBonus);
 
-    // battle method: use special ability
+    /**
+     * Activate's a certain unit class's special ability, whether
+     * it be a decrease in movement cost, an increase in attack
+     * damage, or an increase in defensive bonus.
+     */
     public void activateSpecialAbility();
 
-    // battle method: deactivate special ability
+    /**
+     * Deactivates a certain unit class's special ability, usually
+     * after a certain amount of time has passed.
+     */
     public void deactivateSpecialAbility();
 
-    // battle method: checks if unit is a ranged unit
+    /**
+     * Checks if unit is a ranged or melee unit.
+     * @return boolean
+     */
     public boolean isRangedUnit();
 
-    // general method: refill the unit
+    /**
+     * Sets number of soldiers in unit back to
+     * full capacity (limit).
+     */
     public void refill();
 }

@@ -27,9 +27,6 @@ public class SkirmisherCavalry implements Unit {
 
     /** number of diagonal squares that make up range of unit. */
     private final int rangeFactor;
-    /** ammunition that unit has left (how many attacks you can
-     * do as a ranged unit before you must use melee attack). */
-    private int ammunition;
     /** how much defense the special ability provides, as
      *  a percentage of how much attack damage is reduced. */
     private final double movementBonus;
