@@ -1,5 +1,5 @@
-module gui.main {
+module gui.app {
     requires javafx.controls;
     requires javafx.media;
-    exports gui.main;
+    exports gui.app;
 }
