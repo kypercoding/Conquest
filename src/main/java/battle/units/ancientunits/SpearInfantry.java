@@ -220,6 +220,10 @@ public class SpearInfantry implements Unit {
         this.isActivated = false;
     }
 
+    public boolean specialIsActivated() {
+        return this.isActivated;
+    }
+
     /**
      * Checks if a given unit is ranged or not.
      * @return false since the unit is not a ranged unit.

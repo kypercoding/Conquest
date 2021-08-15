@@ -174,6 +174,10 @@ public class SkirmisherCavalry implements Unit {
         this.isActivated = false;
     }
 
+    public boolean specialIsActivated() {
+        return this.isActivated;
+    }
+
     public boolean isRangedUnit() {
         return true;
     }

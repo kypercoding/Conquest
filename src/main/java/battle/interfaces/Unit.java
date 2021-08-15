@@ -124,6 +124,12 @@ public interface Unit {
     public void deactivateSpecialAbility();
 
     /**
+     * Checks if a unit's special ability is activated.
+     * @return boolean
+     */
+    public boolean specialIsActivated();
+
+    /**
      * Checks if unit is a ranged or melee unit.
      * @return boolean
      */

@@ -28,6 +28,10 @@ public class BattleHandler {
      */
     private void initializeMaps(Unit[] units, int maxMovement,
                                 int maxAmmo) {
+        // initializes the two HashMaps
+        movePoints = new HashMap<>();
+        ammunition = new HashMap<>();
+
         // adds each unit to both ammo and movement
         // HashMaps
         for (Unit unit : units) {
@@ -91,6 +95,10 @@ public class BattleHandler {
         Unit attacker = battlefield.getUnit(attackID);
         Unit defender = battlefield.getUnit(defendID);
 
+        // retrieves defensive area bonus for defender
+        double areaBonus =
+                battlefield.getArea(defendID).getDefenseBonus();
+
         // retrieves number of areas in one row
         int n = battlefield.getRowCount();
 
@@ -106,17 +114,38 @@ public class BattleHandler {
                     "nonexistent");
         }
 
-        // inflicts damage onto defender unit
-        int damage;
-
         // calculates the euclidean distance between two
         // units to ensure that a unit attacks another
         // unit within a valid range
         double dist = GridCalculations.getEuclidDistance(attackID,
                 defendID, n);
 
-        // calculates actual range of a given unit
-        double range = attacker.getRangeFactor() * Math.sqrt(2);
+        // calculates actual range of a given unit, set automatically
+        // to Math.sqrt(2) if it is a ranged unit with no more
+        // ammunition, a melee unit, or a unit that directly
+        // neighbors the unit
+        double range = 0;
+        int ammo = 0;
+        boolean isMelee = checkIfMelee(attacker, range);
+
+        if (!isMelee) {
+            // retrieves the ranged unit's ammunition amount
+            // from the HashMap, if the unit exists in
+            // the HashMap. If it doesn't, then return
+            // failure
+            if (ammunition.containsKey(attacker) && hasAmmo(attacker)) {
+                ammo = ammunition.get(attacker);
+            } else {
+                // reports a missing key bind when there was
+                // supposed to be one
+                if (ammunition.containsKey(attacker)) {
+                    return StateType.returnFailure("Error: ranged " +
+                            "unit lacks proper ammunition binding");
+                }
+            }
+        } else {
+            range = Math.sqrt(2);
+        }
 
         // if the defending unit is out of range, then
         // return failure
@@ -124,45 +153,93 @@ public class BattleHandler {
             return StateType.returnFailure("Error: defender unit is"
                     + " out of range");
         }
-        
-        // sets initial damage to either ranged or melee damage,
-        // depending on unit
-        if (attacker.isRangedUnit()) {
-            // damage inflicted by a ranged unit is automatically
-            // set to melee damage if the ranged unit is too close
-            if (isMeleeRange(dist)) {
-                damage = attacker.getMeleeDamage();
-            } else {
-                damage = attacker.getRangedDamage();
-            }
+
+        // retrieves result of attacking method
+        // and returns the result if applicable
+        StateType result;
+
+        // if the attacker happens to have no ammunition left,
+        // is a melee unit, or is in melee range, then the
+        // unit should attack with melee
+        if (isMelee) {
+            result = attacker.attackWithMelee(defender, areaBonus);
         } else {
-            damage = attacker.getMeleeDamage();
+            result = attacker.attackWithRange(defender, areaBonus);
         }
 
-        // if the unit is a cavalry unit that attacks via melee
-        // damage, then the cavalry unit will receive an extra
-        // melee bonus, increasing linearly with the distance
-        // it traversed
-        if (attacker.getUnitType() == Unit.UnitType.CAVALRY) {
-            if (!attacker.isRangedUnit() || isMeleeRange(dist)) {
-                damage += pathLength;
+        // if failure is found, then return failure
+        if (StateType.checkIfFailure(result)) {
+            return result;
+        }
+
+        // decreases ammunition count of attacker unit, if it is a
+        // ranged unit
+        if (attacker.isRangedUnit()) {
+            // replaces ammunition value for given unit
+            if (ammunition.containsKey(attacker) && !hasAmmo(attacker)) {
+                // prevents unnecessary subtraction when
+                // a unit runs out of ammo
+                if (ammo > 0) {
+                    ammunition.replace(attacker, ammo - 1);
+                }
+            } else {
+                // reports a missing key bind (when it was supposed
+                // to be there)
+                if (ammunition.containsKey(attacker)) {
+                    return StateType.returnFailure("Error: " +
+                            "Ammunition binding for unit does" +
+                            " not exist");
+                }
             }
         }
 
-        // retrieves area defense bonus from defending unit's area
-        // and decreases damage accordingly
-        double defBonus = battlefield.getArea(defendID)
-                .getDefenseBonus();
-        damage *= defBonus;
+        // inflicts charge damage on the defending unit separately
+        // from the main unit's MELEE attack, increasing linearly
+        // with the length of the path taken and doubled if
+        // the unit is a cavalry unit
+        int bonus = 1;
+        int cavalryBonus = 2;
 
-        // if damage happens to drop into a negative number,
-        // then return failure
-        if (damage < 0) {
-            return StateType.returnFailure("Error: negative damage dealt");
+        if (attacker.getUnitType() == Unit.UnitType.CAVALRY)
+            bonus = cavalryBonus;
+
+        if (isMelee) {
+            result = defender.damageUnit(bonus * pathLength);
         }
 
-        // returns result of the calculation to be handled later
-        return defender.damageUnit(damage);
+        return result;
+    }
+
+    /**
+     * Subtracts the cost of moving a unit a certain distance
+     * or prevents the user from moving if they don't have
+     * enough movement points.
+     * @param pathCost, corresponding to cost of moving
+     *                  a unit along a certain path.
+     * @param unit, corresponding to unit that is moving.
+     * @return StateType
+     */
+    public StateType handleMovement(Unit unit, int pathCost) {
+        if (movePoints.containsKey(unit)) {
+            // gets movement points left for unit
+            int movesLeft = movePoints.get(unit);
+
+            // if the unit doesn't have enough movement
+            // points, return failure and prevent user from moving
+            // unit
+            if (movesLeft < pathCost) {
+                return StateType.returnFailure("Error: Not enough " +
+                        "movement points!");
+            }
+
+            // subtracts unit movement cost
+            movePoints.replace(unit, (movesLeft - pathCost));
+        } else {
+            return StateType.returnFailure("Error: unit binding" +
+                    " in movement table not found!");
+        }
+
+        return StateType.returnSuccess(null);
     }
 
     /**
@@ -175,5 +252,57 @@ public class BattleHandler {
      */
     private boolean isMeleeRange(double euclidDistance) {
         return euclidDistance <= Math.sqrt(2);
+    }
+
+    /**
+     * Checks if a given unit has ammunition left.
+     * @param unit, corresponding to the ranged unit.
+     * @return boolean
+     */
+    private boolean hasAmmo(Unit unit) {
+        if (!ammunition.containsKey(unit)) {
+            return false;
+        }
+
+        return ammunition.get(unit) == 0;
+    }
+
+    /**
+     * Returns ammunition a unit has left.
+     * @param unit, corresponding to the ranged unit.
+     * @return int
+     */
+    public int unitAmmunition(Unit unit) {
+        if (!unit.isRangedUnit()) {
+            return 0;
+        }
+
+        return ammunition.get(unit);
+    }
+
+    /**
+     * Returns amount of movement points a unit has left.
+     * @param unit, corresponding to said unit.
+     * @return int
+     */
+    public int unitMovement(Unit unit) {
+        return movePoints.get(unit);
+    }
+
+    /**
+     * Checks if a unit should attack with melee or
+     * ranged attacks.
+     * @param attacker, corresponding to attacking unit.
+     * @param range, corresponding to distance between two units
+     * @return boolean
+     */
+    private boolean checkIfMelee(Unit attacker, double range) {
+        if (!attacker.isRangedUnit())
+            return true;
+
+        if (isMeleeRange(range))
+            return true;
+
+        return !hasAmmo(attacker);
     }
 }

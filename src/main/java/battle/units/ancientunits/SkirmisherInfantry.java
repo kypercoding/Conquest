@@ -265,6 +265,10 @@ public class SkirmisherInfantry implements Unit {
         this.isActivated = false;
     }
 
+    public boolean specialIsActivated() {
+        return this.isActivated;
+    }
+
     /**
      * Checks if a given unit is ranged or not.
      * @return true since the unit is a ranged unit.

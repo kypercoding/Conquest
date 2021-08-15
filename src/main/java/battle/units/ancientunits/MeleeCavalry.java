@@ -142,6 +142,10 @@ public class MeleeCavalry implements Unit {
         this.isActivated = false;
     }
 
+    public boolean specialIsActivated() {
+        return this.isActivated;
+    }
+
     public boolean isRangedUnit() {
         return false;
     }
