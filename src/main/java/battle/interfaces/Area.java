@@ -1,19 +1,30 @@
 package battle.interfaces;
 
 public interface Area {
+    enum AreaType {
+        NORMAL, HILL, MOUNTAIN, WATER, WALL
+    }
+
     /**
-     * Retrieves the id of a certain area
-     * @return
+     * Retrieves the integer id of a certain area.
+     * @return int
      */
     public int getAreaID();
 
-    // retrieves area's defense bonus (by what percent will it reduce an attacker's damage)
+    /**
+     * Retrieves an area's defense bonus.
+     * @return double
+     */
     public double getDefenseBonus();
 
+    /**
+     * Returns
+     * @return
+     */
     // returns area's terrain type (normal, hill, mountain, water, wall)
     public String getAreaType();
 
-    // changes whether or not a unit can move into the area
+    // changes whether a unit can move into the area
     public void changeStatus(boolean isOpen);
 
     // checks if a unit can move into the area

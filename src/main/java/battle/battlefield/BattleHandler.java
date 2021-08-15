@@ -22,6 +22,8 @@ public class BattleHandler {
     private HashMap<Unit, Integer> ammunition;
 
     /**
+
+    /**
      * Initializes the hash maps for a given
      * array of units.
      * @param units, an array of Unit objects
