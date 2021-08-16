@@ -158,7 +158,23 @@ public class MeleeInfantry implements Unit {
      * to Java's toString() method.
      */
     public String getUnitSummary() {
-        return null;
+        StringBuilder s = new StringBuilder();
+        s.append(this.name);
+        s.append("\n");
+        s.append(this.number);
+        s.append(" \\ ");
+        s.append(this.limit);
+        s.append("\n");
+        s.append("Melee Damage: ");
+        s.append(this.meleeDamage);
+        s.append("\nArmor: ");
+        s.append(this.armor);
+        if (this.isActivated) {
+            s.append("\nAbility active");
+        } else {
+            s.append("\nAbility inactive");
+        }
+        return s.toString();
     }
 
     /**
