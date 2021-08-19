@@ -4,6 +4,7 @@ import battle.interfaces.Unit;
 import calculations.GridCalculations;
 import testing.unittesting.StateType;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -345,5 +346,106 @@ public class BattleHandler {
 
         // return ranged unit's full range
         return attacker.getRangeFactor() * Math.sqrt(2);
+    }
+
+    /**
+     * Automatically simulates a battle without
+     * the use of a battlefield. Returns true if
+     * attackers win, false of defenders win. The
+     * winner is determined by a cumulative sum
+     * of unit stats (number, melee damage,
+     * ranged damage, and armor).
+     * @param attackers, an array of attacker units.
+     * @param defenders, an array of defender units.
+     * @return boolean
+     */
+    public static boolean autoBattle(Unit[] attackers,
+                                     Unit[] defenders) {
+        // cumulative sum of attacker stats
+        int aPoints = 0;
+
+        // cumulative sum of defender stats
+        int dPoints = 0;
+
+        // calculates the sum of the number of soldiers,
+        // the melee damage, the ranged damage,
+        // and the armor (skips null spaces)
+        for (Unit attacker : attackers) {
+            if (attacker != null) {
+                aPoints += attacker.getNumber();
+                aPoints += attacker.getMeleeDamage();
+                aPoints += attacker.getRangedDamage();
+                aPoints += attacker.getArmor();
+            }
+        }
+
+        // does the same for defenders
+        for (Unit defender : defenders) {
+            if (defender != null) {
+                dPoints += defender.getNumber();
+                dPoints += defender.getMeleeDamage();
+                dPoints += defender.getRangedDamage();
+                dPoints += defender.getArmor();
+            }
+        }
+
+        // retrieves total number of points from
+        // both sides
+        int total = aPoints + dPoints;
+
+        // if aPoints > dPoints, the attackers win,
+        // otherwise defenders win
+        if (aPoints > dPoints) {
+            handleWinningSide(attackers, aPoints, total);
+            handleLosingSide(defenders);
+        } else {
+            handleWinningSide(defenders, dPoints, total);
+            handleLosingSide(attackers);
+        }
+
+        return aPoints > dPoints;
+    }
+
+    /**
+     * Removes all units in the losing side.
+     * @param units, the units that lost the battle.
+     */
+    private static void handleLosingSide(Unit[] units) {
+        Arrays.fill(units, null);
+    }
+
+    /**
+     * "Guesses" what proportion of the winning army will survive
+     * by taking a certain percentage of each unit's number.
+     * @param units, the units of the winner.
+     * @param winPoints, the points the winner got.
+     * @param total, the total number of points both sides got.
+     */
+    private static void handleWinningSide(Unit[] units,
+                                          int winPoints, int total) {
+        // percentage of each unit that will remain
+        double percent = (double) winPoints / total;
+
+        // every unit will now retain a certain percentage
+        // of its original number. If taking a percentage
+        // results in a 0 integer value, then the unit
+        // is considered destroyed.
+        for (int i = 0; i < units.length; i++) {
+            // retrieves original number of soldiers
+            int number = units[i].getNumber();
+
+            // calculates new number of soldiers
+            int newNum = (int) (number * percent);
+
+            // if the new number of soldiers ends up being zero,
+            // then the program should remove the unit from the
+            // original array. Else, set the number of soldiers
+            // as the new number.
+            if (newNum == 0) {
+                units[i] = null;
+            } else {
+                units[i].setNumber(newNum);
+            }
+        }
     }
 }

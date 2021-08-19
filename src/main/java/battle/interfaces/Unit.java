@@ -146,4 +146,10 @@ public interface Unit {
      * @return UnitType
      */
     public UnitType getUnitType();
+
+    /**
+     * Makes a copy of the given unit
+     * @return Unit
+     */
+    public Unit copyUnit();
 }

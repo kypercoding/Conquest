@@ -7,32 +7,45 @@ import java.util.Random;
 
 public class SkirmisherCavalry implements Unit {
     /** name of the skirmisher cavalry unit (i.e. skirmisher cavalry, horse archers). */
-    private final String name;
+    private String name;
     /** number of soldiers in skirmisher cavalry unit. */
     private int number;
     /** maximum possible number of soldiers in the unit. */
-    private final int limit;
+    private int limit;
     /** cost of buying this new unit. */
-    private final int unitCost;
+    private int unitCost;
 
     /** amount of melee damage the unit deals */
-    private final int meleeDamage;
+    private int meleeDamage;
     /** maximum amount of ranged damage the unit deals. */
-    private final int rangedDamage;
+    private int rangedDamage;
     /** amount of armor the unit has (lowers damage inflicted by a constant
      *  amount). */
-    private final int armor;
+    private int armor;
     /** movement cost for moving one space on the battle board. */
-    private final int movementCost;
+    private int movementCost;
 
     /** number of diagonal squares that make up range of unit. */
-    private final int rangeFactor;
+    private int rangeFactor;
     /** how much defense the special ability provides, as
      *  a percentage of how much attack damage is reduced. */
-    private final double movementBonus;
+    private double movementBonus;
     /** boolean checking whether or not the unit's special ability
      * is activated. */
     private boolean isActivated;
+
+    public SkirmisherCavalry() {
+        this.name = null;
+        this.limit = 0;
+        this.number = 0;
+        this.unitCost = 0;
+        this.meleeDamage = 0;
+        this.rangedDamage = 0;
+        this.armor = 0;
+        this.movementCost = 0;
+        this.rangeFactor = 0;
+        this.movementBonus = 0;
+    }
 
     public SkirmisherCavalry(final String name, final int limit, final int unitCost,
                  final int meleeDamage, final int rangedDamage, final int armor,
@@ -206,5 +219,21 @@ public class SkirmisherCavalry implements Unit {
 
     public UnitType getUnitType() {
         return UnitType.CAVALRY;
+    }
+
+    public Unit copyUnit() {
+        SkirmisherCavalry copy = new SkirmisherCavalry();
+        copy.name = this.name;
+        copy.number = this.number;
+        copy.limit = this.limit;
+        copy.unitCost = this.unitCost;
+        copy.meleeDamage = this.meleeDamage;
+        copy.rangedDamage = this.rangedDamage;
+        copy.armor = this.armor;
+        copy.movementCost = this.movementCost;
+        copy.rangeFactor = this.rangeFactor;
+        copy.movementBonus = this.movementBonus;
+
+        return copy;
     }
 }

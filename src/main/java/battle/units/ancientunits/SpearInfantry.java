@@ -5,31 +5,42 @@ import testing.unittesting.StateType;
 
 public class SpearInfantry implements Unit {
     /** name of the spear infantry unit (i.e. levy spears, hoplites). */
-    private final String name;
+    private String name;
     /** number of soldiers in spear infantry unit. */
     private int number;
     /** maximum possible number of soldiers in the unit. */
-    private final int limit;
+    private int limit;
     /** cost of buying this new unit. */
-    private final int unitCost;
+    private int unitCost;
 
     /** amount of melee damage the unit deals
      (no ranged damage for melee unit). */
-    private final int meleeDamage;
+    private int meleeDamage;
     /** amount of armor the unit has (lowers damage inflicted by a constant
      *  amount). */
-    private final int armor;
+    private int armor;
 
     /** movement cost for moving one space on the battle board. */
-    private final int movementCost;
+    private int movementCost;
 
     /** how much defense the special ability provides, as
      *  a percentage of damage remaining (i.e. a defense bonus
      *  of 80% reduces damage TO 80% of its lethality). */
-    private final double defenseBonus;
+    private double defenseBonus;
     /** boolean checking whether or not the unit's special ability
      * is activated. */
     private boolean isActivated;
+
+    public SpearInfantry() {
+        this.name = null;
+        this.number = 0;
+        this.limit = 0;
+        this.unitCost = 0;
+        this.meleeDamage = 0;
+        this.armor = 0;
+        this.movementCost = 0;
+        this.defenseBonus = 0;
+    }
 
     public SpearInfantry(final String name, final int limit, final int unitCost,
                 final int meleeDamage, final int armor,
@@ -257,5 +268,20 @@ public class SpearInfantry implements Unit {
 
     public UnitType getUnitType() {
         return UnitType.INFANTRY;
+    }
+
+    public Unit copyUnit() {
+        SpearInfantry copy = new SpearInfantry();
+
+        copy.name = this.name;
+        copy.number = this.number;
+        copy.limit = this.limit;
+        copy.unitCost = this.unitCost;
+        copy.meleeDamage = this.meleeDamage;
+        copy.armor = this.armor;
+        copy.movementCost = this.movementCost;
+        copy.defenseBonus = this.defenseBonus;
+
+        return copy;
     }
 }

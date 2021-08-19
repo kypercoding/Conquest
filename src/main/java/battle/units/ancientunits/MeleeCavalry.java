@@ -5,29 +5,40 @@ import testing.unittesting.StateType;
 
 public class MeleeCavalry implements Unit {
     /** name of the melee cavalry unit (i.e. lancers, cataphracts). */
-    private final String name;
+    private String name;
     /** number of soldiers in melee cavalry unit. */
     private int number;
     /** maximum possible number of soldiers in the unit. */
-    private final int limit;
+    private int limit;
     /** cost of buying this new unit. */
-    private final int unitCost;
+    private int unitCost;
 
     /** amount of melee damage the unit deals
      (no ranged damage for melee unit). */
-    private final int meleeDamage;
+    private int meleeDamage;
     /** amount of armor the unit has (lowers damage inflicted by a constant
      *  amount). */
-    private final int armor;
+    private int armor;
 
     /** movement cost for moving one space on the battle board. */
-    private final int movementCost;
+    private int movementCost;
     /** how much defense the special ability provides, as
      *  a percentage of how much attack damage is reduced. */
-    private final double movementBonus;
+    private double movementBonus;
     /** boolean checking whether or not the unit's special ability
      * is activated. */
     private boolean isActivated;
+
+    public MeleeCavalry() {
+        this.name = null;
+        this.number = 0;
+        this.limit = 0;
+        this.unitCost = 0;
+        this.meleeDamage = 0;
+        this.armor = 0;
+        this.movementCost = 0;
+        this.movementBonus = 0;
+    }
 
     public MeleeCavalry(final String name, final int limit, final int unitCost,
                         final int meleeDamage, final int armor,
@@ -176,5 +187,20 @@ public class MeleeCavalry implements Unit {
 
     public UnitType getUnitType() {
         return UnitType.CAVALRY;
+    }
+
+    public Unit copyUnit() {
+        MeleeCavalry copy = new MeleeCavalry();
+
+        copy.name = this.name;
+        copy.number = this.number;
+        copy.limit = this.limit;
+        copy.unitCost = this.unitCost;
+        copy.meleeDamage = this.meleeDamage;
+        copy.armor = this.armor;
+        copy.movementCost = this.movementCost;
+        copy.movementBonus = this.movementBonus;
+
+        return copy;
     }
 }

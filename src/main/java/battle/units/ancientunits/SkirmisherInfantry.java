@@ -8,31 +8,44 @@ import java.util.Random;
 public class SkirmisherInfantry implements Unit {
     /** name of the ranged infantry unit (i.e. archers,
      *  javelins, etc). */
-    private final String name;
+    private String name;
     /** number of soldiers in ranged infantry unit. */
     private int number;
     /** maximum possible number of soldiers in the unit. */
-    private final int limit;
+    private int limit;
     /** cost of buying this new unit. */
-    private final int unitCost;
+    private int unitCost;
 
     /** amount of melee damage the unit deals. */
-    private final int meleeDamage;
+    private int meleeDamage;
     /** maximum amount of ranged damage the unit deals. */
-    private final int rangedDamage;
+    private int rangedDamage;
     /** amount of armor the unit has. */
-    private final int armor;
+    private int armor;
     /** movement cost for moving one space on the battle board. */
-    private final int movementCost;
+    private int movementCost;
 
     /** number of diagonal squares that make up range of unit. */
-    private final int rangeFactor;
+    private int rangeFactor;
     /** how much extra attack the special ability provides, as
      *  a percent increase. */
-    private final double attackBonus;
+    private double attackBonus;
     /** boolean checking whether or not the unit's special ability
      * is activated. */
     private boolean isActivated;
+
+    public SkirmisherInfantry() {
+        this.name = null;
+        this.limit = 0;
+        this.number = 0;
+        this.unitCost = 0;
+        this.meleeDamage = 0;
+        this.rangedDamage = 0;
+        this.armor = 0;
+        this.movementCost = 0;
+        this.rangeFactor = 0;
+        this.attackBonus = 0;
+    }
 
     /**
      * Constructs a new MeleeInfantry object.
@@ -304,5 +317,22 @@ public class SkirmisherInfantry implements Unit {
 
     public UnitType getUnitType() {
         return UnitType.INFANTRY;
+    }
+
+    public Unit copyUnit() {
+        SkirmisherInfantry copy = new SkirmisherInfantry();
+
+        copy.name = this.name;
+        copy.number = this.number;
+        copy.limit = this.limit;
+        copy.unitCost = this.unitCost;
+        copy.meleeDamage = this.meleeDamage;
+        copy.rangedDamage = this.rangedDamage;
+        copy.armor = this.armor;
+        copy.movementCost = this.movementCost;
+        copy.rangeFactor = this.rangeFactor;
+        copy.attackBonus = this.attackBonus;
+
+        return copy;
     }
 }
